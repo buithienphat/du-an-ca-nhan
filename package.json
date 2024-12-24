@@ -4,8 +4,8 @@
   "description": "Dự án cá nhân",
   "main": "server.js",
   "scripts": {
-    "dev": "NODE_ENV=development nodemon backend/server.js",
-    "start": "NODE_ENV=production node backend/server.js"
+    "dev": "NODE_ENV=development nodemon server.js",
+    "start": "NODE_ENV=production node server.js"
   },
   "dependencies": {
     "cors": "^2.8.5",
