@@ -1,15 +1,21 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const dotenv = require("dotenv");
+const cors = require("cors");
 
 dotenv.config();
 
 const productRoutes = require("./routes/productRoutes");
 
 const app = express();
+
+// Sử dụng cors với cấu hình mặc định (cho phép tất cả CORS)
+app.use(cors());
+
+// Middleware để xử lý JSON
 app.use(express.json());
 
-// Connect to MongoDB
+// Kết nối tới MongoDB
 const DB = process.env.MONGO_DB;
 
 mongoose
@@ -20,20 +26,11 @@ mongoose
   .then(() => console.log("Connected to MongoDB"))
   .catch((err) => console.error("Could not connect to MongoDB:", err));
 
-app.use(express.json());
-
-// Use Routes
+// Sử dụng Routes
 app.use("/products", productRoutes);
 
-// Start the server
+// Khởi chạy server
 const PORT = process.env.PORT || 50000;
-
-// if (process.env.NODE_ENV === "production") {
-//   app.use(express.static(path.join(__dirname, "/frontend/dist")));
-//   app.get("*", (req, res) => {
-//     res.sendFile(path.resolve(__dirname, "frontend", "dist", "index.html"));
-//   });
-// }
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
