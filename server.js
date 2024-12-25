@@ -2,10 +2,12 @@ const express = require("express");
 const mongoose = require("mongoose");
 const dotenv = require("dotenv");
 const cors = require("cors");
+const cookieParser = require("cookie-parser");
 
 dotenv.config();
 
 const productRoutes = require("./routes/productRoutes");
+const userRoutes = require("./routes/userRoutes");
 
 const app = express();
 
@@ -14,6 +16,8 @@ app.use(cors());
 
 // Middleware để xử lý JSON
 app.use(express.json());
+
+app.use(cookieParser());
 
 // Kết nối tới MongoDB
 const DB = process.env.MONGO_DB;
@@ -28,10 +32,11 @@ mongoose
 
 // Sử dụng Routes
 app.use("/products", productRoutes);
+app.use("/user", userRoutes);
 
 // Khởi chạy server
-const PORT = process.env.PORT || 50000;
+const port = process.env.PORT || 5001;
 
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
+app.listen(port, () => {
+  console.log(`Server is running on port ${port}`);
 });
