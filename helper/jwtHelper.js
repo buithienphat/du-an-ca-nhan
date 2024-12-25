@@ -4,7 +4,7 @@ const JWT_SECRET = process.env.JWT_SECRET;
 const JWT_REFRESH_SECRET = process.env.JWT_REFRESH_SECRET;
 
 // Hàm tạo token
-const createToken = (payload, expiresIn = "30s") => {
+const createToken = (payload, expiresIn = "1d") => {
   return jwt.sign(payload, JWT_SECRET, { expiresIn });
 };
 
