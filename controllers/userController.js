@@ -17,10 +17,11 @@ exports.getAllUsers = async (req, res) => {
 };
 
 exports.getUser = async (req, res) => {
-  console.log("req", req);
-
   try {
     // Get token from cookies
+
+    console.log("req.cookies", req.cookies);
+
     const token = req.cookies.token;
 
     if (!token) {
