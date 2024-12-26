@@ -16,59 +16,32 @@ exports.getAllUsers = async (req, res) => {
   }
 };
 
-// exports.getUser = async (req, res) => {
-//   try {
-//     // Get token from cookies
-//     const token = req.cookies.token;
+exports.getUser = async (req, res) => {
+  console.log("req", req);
 
-//     if (!token) {
-//       return res.status(401).json({ message: "Authorization token required" });
-//     }
-
-//     // Verify the token
-//     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-
-//     // Fetch user by ID from decoded token
-//     const user = await User.findById(decoded.id).select("-password");
-
-//     if (!user) {
-//       return res.status(404).json({ message: "User not found" });
-//     }
-
-//     res.status(200).json(user);
-//   } catch (err) {
-//     if (err.name === "JsonWebTokenError") {
-//       return res.status(403).json({ message: "Invalid token" });
-//     }
-//     res.status(500).json({ error: err.message });
-//   }
-// };
-
-exports.loginUser = async (req, res) => {
   try {
-    const { email, password } = req.body;
+    // Get token from cookies
+    const token = req.cookies.token;
 
-    // Kiểm tra user
-    const user = await User.findOne({ email });
-    if (!user || !(await user.matchPassword(password))) {
-      return res.status(401).json({ message: "Invalid email or password" });
+    if (!token) {
+      return res.status(401).json({ message: "Authorization token required" });
     }
 
-    // Tạo JWT token
-    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
-      expiresIn: "1d", // Token hết hạn sau 1 ngày
-    });
+    // Verify the token
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
-    // Gắn token vào cookie
-    res.cookie("token", token, {
-      httpOnly: true,
-      secure: true, // Phải bật HTTPS
-      sameSite: "none", // Cho phép cross-site
-      maxAge: 24 * 60 * 60 * 1000, // 1 ngày
-    });
+    // Fetch user by ID from decoded token
+    const user = await User.findById(decoded.id).select("-password");
 
-    res.status(200).json({ message: "Login successful", user });
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    res.status(200).json(user);
   } catch (err) {
+    if (err.name === "JsonWebTokenError") {
+      return res.status(403).json({ message: "Invalid token" });
+    }
     res.status(500).json({ error: err.message });
   }
 };
